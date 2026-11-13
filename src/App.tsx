@@ -11,6 +11,7 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [cartCount, setCartCount] = useState<number>(0);
+  const [envName, setEnvName] = useState<string>('...');
 
   useEffect(() => {
     getProducts()
@@ -26,27 +27,37 @@ export default function App() {
       });
   }, []);
 
+  useEffect(() => {
+    fetch('/env.json', { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((cfg) => setEnvName(cfg.APP_ENV ?? 'Unknown'))
+      .catch(() => setEnvName('Unknown'));
+  }, []);
+
   return (
-   <div style={{ fontFamily: 'Segoe UI, sans-serif', width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '0px 24px 24px 24px' }}>
+    <div style={{ fontFamily: 'Segoe UI, sans-serif', width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '0px 24px 24px 24px' }}>
       {/* Top Navbar */}
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #0078D4', marginBottom: '24px' }}>
         {/* Brand Logos Container */}
-<div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-  <img 
-    src={logoVHash} 
-    alt="Vhaash Technologies" 
-    style={{ height: '42px', width: 'auto', objectFit: 'contain' }} 
-  />
-  <div style={{ width: '1px', height: '32px', backgroundColor: '#CBD5E1' }} />
-  <img 
-    src={logoKiHash} 
-    alt="KiHash" 
-    style={{ width: '135px', height: 'auto', objectFit: 'contain' }} 
-  />
-</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+          <img
+            src={logoVHash}
+            alt="Vhaash Technologies"
+            style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
+          />
+          <div style={{ width: '1px', height: '32px', backgroundColor: '#CBD5E1' }} />
+          <img
+            src={logoKiHash}
+            alt="KiHash"
+            style={{ width: '135px', height: 'auto', objectFit: 'contain' }}
+          />
+        </div>
         <div>
           <h1 style={{ margin: 0, color: '#0F2C59', fontSize: '24px' }}>CloudMart Store</h1>
           <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '14px' }}>React 19 + TypeScript + Azure Demo</p>
+        </div>
+        <div style={{ background: '#E2F5E9', color: '#166534', padding: '6px 14px', borderRadius: '6px', fontWeight: 600, fontSize: '14px' }}>
+          Env: {envName}
         </div>
         <div style={{ background: '#0078D4', color: '#fff', padding: '8px 18px', borderRadius: '20px', fontWeight: 'bold', fontSize: '15px' }}>
           🛒 Cart: {cartCount}
@@ -55,32 +66,34 @@ export default function App() {
 
       {/* Loading state */}
       {loading ? (
-       <div style={{ textAlign: 'center', padding: '80px 20px' }}>
-    {/* CSS Spinner */}
-    <div
-      style={{
-        width: '48px',
-        height: '48px',
-        border: '5px solid #E2E8F0',
-        borderTop: '5px solid #0078D4',
-        borderRadius: '50%',
-        margin: '0 auto 16px',
-        animation: 'spin 1s linear infinite'
-      }}
-    />
-    <style>{`
+        <div style={{ textAlign: 'center', padding: '80px 20px' }}>
+          {/* CSS Spinner */}
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              border: '5px solid #E2E8F0',
+              borderTop: '5px solid #0078D4',
+              borderRadius: '50%',
+              margin: '0 auto 16px',
+              animation: 'spin 1s linear infinite'
+            }}
+          />
+          <style>{`
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
     `}</style>
-    <h3 style={{ color: '#0F2C59', margin: '0 0 8px' }}>Fetching Catalog from DummyJSON API...</h3>
-    <p style={{ color: '#64748B', margin: 0, fontSize: '14px' }}>Simulating cloud API latency (3.5s)</p>
-  </div>
+          <h3 style={{ color: '#0F2C59', margin: '0 0 8px' }}>Fetching Catalog from DummyJSON API...</h3>
+          <p style={{ color: '#64748B', margin: 0, fontSize: '14px' }}>Simulating cloud API latency (3.5s)</p>
+        </div>
       ) : (
         /* Product Cards Grid */
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', 
-    gap: '20px',     width: '100%' }}>
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+          gap: '20px', width: '100%'
+        }}>
           {products.map((item) => (
             <div
               key={item.id}
