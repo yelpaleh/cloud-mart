@@ -101,5 +101,5 @@ If you want to learn more about creating good readme files then refer the follow
 1. Azure Portal → your App Service → Settings → Environment variables
 2. Add a setting named APP_ENV with the value Prod, then click Apply / Save.
 3. Go to Settings → Configuration → Stack settings → Startup Command and enter:
-    sh /home/site/wwwroot/startup.sh
+    sh /home/site/wwwroot/dist/startup.sh
 4. Save, which restarts the app.
